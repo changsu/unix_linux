@@ -1,8 +1,16 @@
  #include <apue.h>
- int main()
- {
-         err_sys("some error found %d",getpid());
 
-         return 0 ;
+ int main(void) {
+   int c;
+   while ((c = getc(stdin)) != EOF) {
+     if (putc(c, stdout) == EOF) {
+       err_sys("output_error");
+     }
+   }
+   
+   if (ferror(stdin)) {
+     err_sys("input_error");
+   }
 
+   exit(0);
  }
