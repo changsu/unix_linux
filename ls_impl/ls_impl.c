@@ -19,5 +19,6 @@ int main(int argc, char *argv[]) {
   }
   
   closedir(dp);
+  // 0 means OK , 1 to 255 means that error occured
   exit(0);
 }
