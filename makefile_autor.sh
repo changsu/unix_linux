@@ -5,7 +5,6 @@ UPPER_OLD_WORD=`echo $OLD_WORD | tr 'a-z' 'A-Z'`
 NEW_WORD="$1"
 UPPER_NEW_WORD=`echo $NEW_WORD | tr 'a-z' 'A-Z'`
 MAKEFILE_DIR="/Users/chang/Documents/Self_Learning/unix_linux/Makefile"
-TMP_FILE_NAME="tmp"
 FINAL_MAKEFILE="Makefile"
 
 if [ $# -ne 1 ]; then
