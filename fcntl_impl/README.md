@@ -20,3 +20,12 @@ chang-mbp:fcntl_impl chang$ ./fcntl_impl 5 5<>temp.foo2
 read write
 </pre>
 
+Turn on flag:
+<pre>
+val |= flags
+</pre>
+
+Turn off flag:
+<pre>
+val &= ~flags
+</pre>
