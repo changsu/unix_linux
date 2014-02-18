@@ -10,3 +10,6 @@ chang-mbp:file_hole chang$ od -c file.hole
 0040000    A   B   C   D   E   F   G   H   I   J
 0040012
 </pre>
+
+<b>The return value of write sld be the same with the bytes assigned in the argument, otherwise, it means some
+error occurs say filling up a disk or so</b>
