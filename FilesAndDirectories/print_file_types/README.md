@@ -1,3 +1,5 @@
+lstat can detect symbolic link, stat can not
+
 Result
 <pre>
 /dev/ptyud: character special
