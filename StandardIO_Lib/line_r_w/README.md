@@ -1,0 +1,4 @@
+<pre>
+fgets
+fputs
+</pre>
