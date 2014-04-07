@@ -1,0 +1,13 @@
+CC=g++
+CFLAGS=-c -Wall
+ECHOALL=echoall
+
+all: $(ECHOALL)
+
+$(ECHOALL): echoall.o
+	$(CC) echoall.o -o $(ECHOALL)
+
+echoall.o: echoall.c
+	$(CC) $(CFLAGS) echoall.c
+clean:
+	rm -fr *.o $(ECHOALL)
