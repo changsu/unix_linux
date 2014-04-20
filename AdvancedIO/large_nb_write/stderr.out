@@ -1,0 +1,2 @@
+read 200000 bytes
+nwrite = 200000, errno = 0
