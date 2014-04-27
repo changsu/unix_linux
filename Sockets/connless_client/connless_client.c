@@ -1,0 +1,83 @@
+#include <apue.h>
+#include <netdb.h>
+#include <errno.h>
+#include <sys/socket.h>
+
+#define TIMEOUT 20
+#define BUFLEN 128
+#define MAXSLEEP 128
+
+void sigalarm(int signo) {
+  // do nothing
+}
+
+void print_uptime(int sockfd, struct addrinfo *aip) {
+  int n;
+  char buf[BUFLEN];
+  
+  // send 1 byte to server to indicate address of client
+  buf[0] = 0;
+  if (sendto(sockfd, buf, 1, 0, aip->ai_addr, aip->ai_addrlen) < 0) {
+    err_sys("send to error");
+  }
+
+  // prevent recvfrom function blocking infinitely
+  alarm(TIMEOUT);
+
+  // for client, we don't care the sender address
+  if (( n = recvfrom(sockfd, buf, BUFLEN, 0, NULL, NULL)) < 0) {
+    if (errno != EINTR)
+      alarm(0);
+    err_sys("recv error");
+  }
+  alarm(0); // clear alarm
+  write(STDOUT_FILENO, buf, n);
+}
+
+int main(int argc, char *argv[]) {
+  struct addrinfo *ailist, *aip;
+  struct addrinfo hint;
+  int sockfd, err;
+  struct sigaction sa;
+  
+  if (argc != 2) {
+    err_quit("usage: ruptime hostname");
+  }
+
+  // register alarm signal handler
+  sa.sa_handler = sigalarm;
+  sa.sa_flags = 0;
+  sigemptyset(&sa.sa_mask);
+  if (sigaction(SIGALRM, &sa, NULL) < 0) {
+    err_sys("sigaction error");
+  }
+
+  hint.ai_flags = 0;
+  hint.ai_family = 0;
+  hint.ai_socktype = SOCK_DGRAM;
+  hint.ai_protocol = 0;
+  hint.ai_addrlen = 0;
+  hint.ai_canonname = NULL;
+  hint.ai_addr = NULL;
+  hint.ai_next = NULL;
+  
+  // get addresses of the host name and ruptime service
+  if ((err = getaddrinfo(argv[1], "ruptime", &hint, &ailist)) != 0) {
+    err_quit("getaddrinfo error: %s", gai_strerror(err));
+  }
+
+  // multiple network interfaces/protocols, find the one that 
+  // allow us to connect to the service and then bail
+  for (aip = ailist; aip != NULL; aip = aip->ai_next) {
+    // create socket
+    if ((sockfd = socket(aip->ai_family, SOCK_DGRAM, 0)) < 0) {
+      err = errno;
+    } else {
+      print_uptime(sockfd, aip);
+      exit(0);
+    }
+  }
+
+  fprintf(stderr, "can't connect to %s: %s\n", argv[1], strerror(err));
+  exit(1);
+}
