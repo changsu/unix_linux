@@ -1,8 +1,9 @@
 #include <apue.h>
+#include <sys/socket.h>
 
 static void sig_pipe(int);
 int s_pipe(int fd[2]) {
-  return (pipe(fd));
+  return(socketpair(AF_UNIX, SOCK_STREAM, 0, fd));
 }
 
 int main() {
