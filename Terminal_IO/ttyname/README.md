@@ -1,3 +1,4 @@
+ttyname: given a filter descriptor, return the device name for that fd in /dev directory normally
 <pre>
 chang-mbp:ttyname chang$ ./ttyname
 fd 1: /dev/ttys000
